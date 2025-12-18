@@ -11,6 +11,6 @@ public record RepositoryOverviewResponse(
     LocalDateTime createdAt,
     LocalDateTime updatedAt,
     int openIssues,
-    String mainLanguage
+    String language
 ) {
 }
