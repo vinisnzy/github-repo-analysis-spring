@@ -8,20 +8,15 @@ public record GetRepositoryOverviewResponse(
         String name,
         String description,
 
-        @JsonProperty("owner") 
-        OwnerResponse owner,
+        @JsonProperty("owner") UserResponse owner,
 
-        @JsonProperty("stargazers_count") 
-        int stars,
+        @JsonProperty("stargazers_count") int stars,
         int forks,
 
-        @JsonProperty("created_at")
-        LocalDateTime createdAt,
+        @JsonProperty("created_at") LocalDateTime createdAt,
 
-        @JsonProperty("updated_at") 
-        LocalDateTime updatedAt,
+        @JsonProperty("updated_at") LocalDateTime updatedAt,
 
-        @JsonProperty("open_issues_count") 
-        int openIssues,
+        @JsonProperty("open_issues_count") int openIssues,
         String language) {
 }
