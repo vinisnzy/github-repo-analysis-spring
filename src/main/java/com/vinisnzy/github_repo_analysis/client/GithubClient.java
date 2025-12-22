@@ -10,17 +10,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.vinisnzy.github_repo_analysis.client.dto.response.GetRepositoryCommitsResponse;
 import com.vinisnzy.github_repo_analysis.client.dto.response.GetRepositoryFile;
 import com.vinisnzy.github_repo_analysis.client.dto.response.GetRepositoryIssuesResponse;
+import com.vinisnzy.github_repo_analysis.client.dto.response.GetRepositoryOverviewResponse;
 import com.vinisnzy.github_repo_analysis.client.dto.response.GetRepositoryPRsResponse;
-import com.vinisnzy.github_repo_analysis.dto.response.RepositoryOverviewResponse;
 
 @FeignClient(name = "githubClient", url = "https://api.github.com")
 public interface GithubClient {
 
         @GetMapping("/repos/{owner}/{repo}")
-        RepositoryOverviewResponse getRepositoryOverview(@PathVariable String owner, @PathVariable String repo);
-
-        @GetMapping("/repos/{owner}/{repo}/commits")
-        List<GetRepositoryCommitsResponse> getRepositoryCommits(@PathVariable String owner, @PathVariable String repo);
+        GetRepositoryOverviewResponse getRepositoryOverview(@PathVariable String owner, @PathVariable String repo);
 
         @GetMapping("/repos/{owner}/{repo}/commits")
         List<GetRepositoryCommitsResponse> getRepositoryCommits(@PathVariable String owner,
