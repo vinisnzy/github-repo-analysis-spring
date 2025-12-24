@@ -1,10 +1,11 @@
 package com.vinisnzy.github_repo_analysis.service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.vinisnzy.github_repo_analysis.client.GithubClient;
@@ -21,18 +22,21 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RepositoryService {
 
+  @Value("${github.secret.token}")
+  String GITHUB_TOKEN;
+
   private final GithubClient githubClient;
 
   public RepositoryCommitsResponse getRepositoryCommits(RepositoryRequest data) {
     List<GetRepositoryCommitsResponse> repoCommits = githubClient.getRepositoryCommits(data.owner(), data.repository(),
-        LocalDate.now().minusDays(7).toString());
+        LocalDateTime.now().minusDays(7).toString());
 
     Double averageCommitsPerWeek = repoCommits.size() / 7.0;
     Integer totalCommits = repoCommits.size();
 
     Map<String, Integer> contributorsCount = new HashMap<>();
     repoCommits.forEach(commit -> {
-      String committer = commit.commiter().login();
+      String committer = commit.commit().committer().name();
       contributorsCount.put(committer, contributorsCount.getOrDefault(committer, 0) + 1);
     });
 
@@ -50,16 +54,16 @@ public class RepositoryService {
   }
 
   public RepositoryIssuesPRsResponse getRepositoryIssuesPRs(RepositoryRequest data) {
-    var repoIssues = githubClient.getRepositoryIssues(data.owner(), data.repository(), "all",
-        LocalDate.now().minusDays(7).toString());
+    var repoIssues = githubClient.getRepositoryIssues(data.owner(), data.repository(),
+        LocalDateTime.now().minusDays(7).toString(), GITHUB_TOKEN);
 
     Double averageIssuesPerWeek = repoIssues.size() / 7.0;
     Integer totalIssues = repoIssues.size();
     Integer openIssues = (int) repoIssues.stream().filter(issue -> issue.state().equals("open")).count();
     Integer closedIssues = totalIssues - openIssues;
 
-    var repoPRs = githubClient.getRepositoryPRs(data.owner(), data.repository(), "all",
-        LocalDate.now().minusDays(7).toString());
+    var repoPRs = githubClient.getRepositoryPRs(data.owner(), data.repository(),
+        LocalDateTime.now().minusDays(7).toString(), GITHUB_TOKEN);
 
     Integer totalPRs = repoPRs.size();
     Double averagePRsPerWeek = totalPRs / 7.0;
